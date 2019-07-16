@@ -28,8 +28,8 @@ delete;id
 ```
 
 ## Contributing
-This project is being worked on by [Henry Larson](https://github.com/hxl1116) and 
-[Griffin Seibold](https://github.com/gxs1619).
+This project is being worked on by [Yasiru Karunawansa](https://github.com/yasiru98), 
+[Henry Larson](https://github.com/hxl1116), and [Griffin Seibold](https://github.com/gxs1619).
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
