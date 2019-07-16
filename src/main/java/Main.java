@@ -5,23 +5,36 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 
+/**
+ * Main is the driver class for the CRM Tool API
+ */
 public class Main {
+    // Configuration variables
     private static final String CONFIG_FILE = "src/main/resources/config.xml";
     private static final String PROPERTIES_COMMENT = "Properties";
     private static final String DATABASE_URL_PROPERTY = "database_url";
     private static final String CURRENT_ID_PROPERTY = "current_id";
 
+    // Scanner for user input
     private static final Scanner scanner = new Scanner(System.in);
 
+    // Configuration properties
     private static Properties properties = new Properties();
+    // Data access object
     private static CustomerDOA customerDOA;
 
+    // Input loop flag
     private static boolean flag = true;
 
+    /**
+     * Loads configuration properties, instantiates the <code>CustomerDOA</code> data access object, and takes in user
+     * input.
+     *
+     * @param args the command line arguments.
+     */
     public static void main(String[] args) {
         loadProperties();
 
@@ -103,6 +116,9 @@ public class Main {
         }
     }
 
+    /**
+     * Loads configuration properties from the config.xml file.
+     */
     private static void loadProperties() {
         try (FileInputStream inputStream = new FileInputStream(CONFIG_FILE)) {
             properties.loadFromXML(inputStream);
@@ -111,6 +127,9 @@ public class Main {
         }
     }
 
+    /**
+     * Saves configuration properties to the config.xml file.
+     */
     private static void saveProperties() {
         try (FileOutputStream outputStream = new FileOutputStream(CONFIG_FILE)) {
             properties.setProperty("current_id", Integer.toString(customerDOA.getCurrentID()));

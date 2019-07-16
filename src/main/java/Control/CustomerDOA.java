@@ -6,6 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * CustomerDOA is the data access object for the customer database.
+ *
+ * @author Henry Larson
+ */
 public class CustomerDOA {
     private static final String DATABASE_URL_PREFIX = "jdbc:sqlite:";
 
