@@ -18,13 +18,13 @@ public class Customer {
     /**
      * Creates a new <code>Customer</code> object.
      *
-     * @param id the customer unique ID.
-     * @param firstName the customer's first name.
-     * @param lastName the customer's last name.
-     * @param address the customer's address.
-     * @param email the customer's email.
-     * @param age the customer's age.
-     * @param gender the customer's gender.
+     * @param id         the customer unique ID.
+     * @param firstName  the customer's first name.
+     * @param lastName   the customer's last name.
+     * @param address    the customer's address.
+     * @param email      the customer's email.
+     * @param age        the customer's age.
+     * @param gender     the customer's gender.
      * @param profession the customer's profession.
      */
     public Customer(
@@ -49,11 +49,12 @@ public class Customer {
 
     /**
      * Gets a string representation of a <code>Customer</code>
-     *
+     * <p>
      * Customer ID: <code>id</code>
-     *      <code>firstName</code>
+     * <code>firstName</code>, <code>lastName</code>, <code>age</code>, <code>gender</code>
+     * <code>address</code>, <code>email</code>, <code>profession</code>
      *
-     * @return
+     * @return the formatted string representation of a <code>Customer</code> object.
      */
     @Override
     public String toString() {

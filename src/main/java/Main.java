@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 /**
  * Main is the driver class for the CRM Tool API
+ *
+ * @author Henry Larson
  */
 public class Main {
     // Configuration variables
@@ -42,6 +44,8 @@ public class Main {
                 properties.getProperty(DATABASE_URL_PROPERTY),
                 Integer.parseInt(properties.getProperty(CURRENT_ID_PROPERTY))
         );
+
+        printUsage();
 
         while (flag) {
             String input = scanner.nextLine();
@@ -106,12 +110,12 @@ public class Main {
                         saveProperties();
                         break;
                     default:
-                        System.err.println("Unknown command: " + input);
-                        System.out.println("Usage: command;parameters (comma separated)");
+                        printCommandError(input);
+                        printUsage();
                 }
             } else {
-                System.err.println("Unknown command: " + input);
-                System.out.println("Usage: command;parameters (comma separated)");
+                printCommandError(input);
+                printUsage();
             }
         }
     }
@@ -137,5 +141,21 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Prints an error message for an unknown command.
+     *
+     * @param input the unknown command.
+     */
+    private static void printCommandError(String input) {
+        System.err.println("Unknown command: " + input);
+    }
+
+    /**
+     * Prints the usage for standard input to access the API.
+     */
+    private static void printUsage() {
+        System.out.println("Usage: command;parameters (comma separated)");
     }
 }
