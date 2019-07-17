@@ -2,9 +2,12 @@ package Control;
 
 import Model.Customer;
 
+import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CustomerDOA is the data access object for the customer database.
@@ -164,22 +167,33 @@ public class CustomerDOA {
      * @param gender     the customer's gender.
      * @param profession the customer's profession.
      */
+    // TODO: 7/16/2019 Refactor so that SQL statement is dynamically generated from non-null parameters.
     public void updateCustomer(
             int id,
             String firstName,
             String lastName,
             String address,
             String email,
-            int age,
+            String age,
             String gender,
             String profession
     ) {
+        Customer selectedCustomer = selectCustomer(id).get(0);
+
+        if (firstName.equals("")) firstName = selectedCustomer.getFirstName();
+        if (lastName.equals("")) lastName = selectedCustomer.getLastName();
+        if (address.equals("")) address = selectedCustomer.getAddress();
+        if (email.equals("")) email = selectedCustomer.getEmail();
+        if (age.equals("")) age = selectedCustomer.getAgeAsString();
+        if (gender.equals("")) gender = selectedCustomer.getGender();
+        if (profession.equals("")) profession = selectedCustomer.getProfession();
+
         try (PreparedStatement statement = getConnection().prepareStatement(UPDATE_CUSTOMER_QUERY)) {
             statement.setString(1, firstName);
             statement.setString(2, lastName);
             statement.setString(3, address);
             statement.setString(4, email);
-            statement.setInt(5, age);
+            statement.setInt(5, Integer.parseInt(age));
             statement.setString(6, gender);
             statement.setString(7, profession);
             statement.setInt(8, id);

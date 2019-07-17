@@ -4,9 +4,7 @@ import Model.Customer;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Main is the driver class for the CRM Tool API
@@ -96,7 +94,7 @@ public class Main {
                                 data[2],
                                 data[3],
                                 data[4],
-                                Integer.parseInt(data[5]),
+                                data[5],
                                 data[6],
                                 data[7]
                         );

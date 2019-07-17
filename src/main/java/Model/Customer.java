@@ -47,6 +47,38 @@ public class Customer {
         this.profession = profession;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getAgeAsString() {
+        return Integer.toString(age);
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
     /**
      * Gets a string representation of a <code>Customer</code>
      * <p>

@@ -10,6 +10,10 @@ REST-full API.
 Clone the project into an IDE. For IntelliJ, open the Database tab on the right sidebar and add the customer.db by
 selecting "Data Source from Path".
 
+## Configuration
+The config.xml file contains the database url and current customer ID for the project. If the database url connection is unsuccessful, the 
+property may need to be modified for the user.
+
 ## Usage
 Compile and run. Enter commands through standard input.
 
