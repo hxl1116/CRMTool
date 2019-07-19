@@ -1,10 +1,16 @@
 import Control.CustomerDOA;
 import Model.Customer;
+import Response.Response;
+import Response.StatusResponse;
+import com.google.gson.Gson;
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+
+import static spark.Spark.*;
 
 /**
  * Main is the driver class for the CRM Tool API
@@ -46,6 +52,67 @@ public class Main {
         printUsage();
 
         while (flag) {
+            BasicConfigurator.configure();
+
+            /**
+             * HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
+             */
+            get("/customers", (req, res)->customerDOA.selectAllCustomers());
+
+            /**
+             * HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
+             */
+            get("/customers/:id", (req,res)->customerDOA.selectCustomer(Integer.parseInt(":id")));
+
+            /**
+             * HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
+             * the customer to be created. We need to add a system for creating ID's so the user does not create their own ID. Duplicate ID's
+             * are going to get very messy.
+             */
+            post("/customers/createCustomer", (request, response) -> {
+                response.type("application/json");
+                Customer customer = new Gson().fromJson(request.body(), Customer.class);
+                System.out.println(customer.toString());
+                customerDOA.insertCustomer(customer);
+
+                return new Gson()
+                        .toJson(new Response(StatusResponse.SUCCESS));
+            });
+
+            /**
+             * HTTP Request would look like: http://localhost:4567/customers/updateCustomer  Where the body would be a json object representing
+             * the customer with updated information. ID's can be updated, but this should be removed in the future.
+             */
+            put("/customers/updateCustomer", (request, response) -> {
+                response.type("application/json");
+                Customer toEdit = new Gson().fromJson(request.body(), Customer.class);
+
+                if(toEdit.getId() != 0){
+                    customerDOA.updateCustomer(toEdit);
+                }
+                Customer editedCustomer = customerDOA.selectCustomer(toEdit.getId()).get(0);
+
+                if (editedCustomer != null) {
+                    return new Gson().toJson(
+                            new Response(StatusResponse.SUCCESS,new Gson()
+                                    .toJsonTree(editedCustomer)));
+                } else {
+                    return new Gson().toJson(
+                            new Response(StatusResponse.ERROR,new Gson()
+                                    .toJson("Customer not found or error in edit")));
+                }
+            });
+
+            /**
+             * HTTP Request would look like: http://localhost:4567/customers/deleteCustomer/id  Where id of the customer you wish to delete
+             */
+            delete("/customers/deleteCustomer/:id", (request, response) -> {
+                response.type("application/json");
+                customerDOA.deleteCustomer(Integer.parseInt(request.params(":id")));
+                return new Gson().toJson(
+                        new Response(StatusResponse.SUCCESS, "user deleted"));
+            });
+
             String input = scanner.nextLine();
             if (input.contains(";")) {
                 String command = input.substring(0, input.indexOf(";"));
@@ -54,15 +121,8 @@ public class Main {
                 switch (command) {
                     case "add":
                         data = parameters.split(",");
-                        customerDOA.insertCustomer(
-                                data[0],
-                                data[1],
-                                data[2],
-                                data[3],
-                                Integer.parseInt(data[4]),
-                                data[5],
-                                data[6]
-                        );
+                        Customer newCustomer = new Customer(customerDOA.getCurrentID(), data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), data[5], data[6]);
+                        customerDOA.insertCustomer(newCustomer);
                         break;
                     case "get":
                         ArrayList<Customer> selectedCustomers;
@@ -88,16 +148,8 @@ public class Main {
                         break;
                     case "update":
                         data = parameters.split(",");
-                        customerDOA.updateCustomer(
-                                Integer.parseInt(data[0]),
-                                data[1],
-                                data[2],
-                                data[3],
-                                data[4],
-                                data[5],
-                                data[6],
-                                data[7]
-                        );
+                        Customer customer = new Customer(Integer.parseInt(data[0]), data[1], data[2], data[3], data[4], Integer.parseInt(data[5]), data[6], data[7]);
+                        customerDOA.updateCustomer(customer);
                         break;
                     case "delete":
                         if (parameters.matches("[0-9]+")) customerDOA.deleteCustomer(Integer.parseInt(parameters));
