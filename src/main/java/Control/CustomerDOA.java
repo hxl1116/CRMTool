@@ -1,6 +1,8 @@
 package Control;
 
 import Model.Customer;
+import Response.StatusResponse;
+import Response.Response;
 
 import java.lang.reflect.Method;
 import java.sql.*;
@@ -121,32 +123,18 @@ public class CustomerDOA {
     /**
      * Performs an insertion query on the local database.
      *
-     * @param firstName  the customer's first name.
-     * @param lastName   the customer's last name.
-     * @param address    the customer's address.
-     * @param email      the customer's email.
-     * @param age        the customer's age.
-     * @param gender     the customer's gender.
-     * @param profession the customer's profession.
+     * @param customer an object representing a customer
      */
-    public void insertCustomer(
-            String firstName,
-            String lastName,
-            String address,
-            String email,
-            int age,
-            String gender,
-            String profession
-    ) {
+    public String insertCustomer(Customer customer) {
         try (PreparedStatement statement = getConnection().prepareStatement(INSERT_CUSTOMER_QUERY)) {
             statement.setInt(1, currentID);
-            statement.setString(2, firstName);
-            statement.setString(3, lastName);
-            statement.setString(4, address);
-            statement.setString(5, email);
-            statement.setInt(6, age);
-            statement.setString(7, gender);
-            statement.setString(8, profession);
+            statement.setString(2, customer.getFirstName());
+            statement.setString(3, customer.getLastName());
+            statement.setString(4, customer.getAddress());
+            statement.setString(5, customer.getEmail());
+            statement.setInt(6, customer.getAge());
+            statement.setString(7, customer.getGender());
+            statement.setString(8, customer.getProfession());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -154,49 +142,35 @@ public class CustomerDOA {
         } finally {
             currentID++;
         }
+        return "Successfully added Customer.";
     }
 
     /**
      * Performs an update query on the local database.
      *
-     * @param firstName  the customer's first name.
-     * @param lastName   the customer's last name.
-     * @param address    the customer's address.
-     * @param email      the customer's email.
-     * @param age        the customer's age.
-     * @param gender     the customer's gender.
-     * @param profession the customer's profession.
+     * @param customer object that represents a Customer.
      */
     // TODO: 7/16/2019 Refactor so that SQL statement is dynamically generated from non-null parameters.
-    public void updateCustomer(
-            int id,
-            String firstName,
-            String lastName,
-            String address,
-            String email,
-            String age,
-            String gender,
-            String profession
-    ) {
-        Customer selectedCustomer = selectCustomer(id).get(0);
+    public void updateCustomer(Customer customer) {
+        Customer selectedCustomer = selectCustomer(customer.getId()).get(0);
 
-        if (firstName.equals("")) firstName = selectedCustomer.getFirstName();
-        if (lastName.equals("")) lastName = selectedCustomer.getLastName();
-        if (address.equals("")) address = selectedCustomer.getAddress();
-        if (email.equals("")) email = selectedCustomer.getEmail();
-        if (age.equals("")) age = selectedCustomer.getAgeAsString();
-        if (gender.equals("")) gender = selectedCustomer.getGender();
-        if (profession.equals("")) profession = selectedCustomer.getProfession();
+        if (customer.getFirstName().equals("")) customer.setFirstName(selectedCustomer.getFirstName());
+        if (customer.getLastName().equals("")) customer.setLastName(selectedCustomer.getLastName());
+        if (customer.getAddress().equals("")) customer.setAddress(selectedCustomer.getAddress());
+        if (customer.getEmail().equals("")) customer.setEmail(selectedCustomer.getEmail());
+        if (customer.getAge() == 0) customer.setAge(selectedCustomer.getAge());
+        if (customer.getGender().equals("")) customer.setGender(selectedCustomer.getGender());
+        if (customer.getProfession().equals("")) customer.setProfession(selectedCustomer.getProfession());
 
         try (PreparedStatement statement = getConnection().prepareStatement(UPDATE_CUSTOMER_QUERY)) {
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setString(3, address);
-            statement.setString(4, email);
-            statement.setInt(5, Integer.parseInt(age));
-            statement.setString(6, gender);
-            statement.setString(7, profession);
-            statement.setInt(8, id);
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
+            statement.setString(3, customer.getAddress());
+            statement.setString(4, customer.getEmail());
+            statement.setInt(5, customer.getAge());
+            statement.setString(6, customer.getGender());
+            statement.setString(7, customer.getProfession());
+            statement.setInt(8, customer.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
