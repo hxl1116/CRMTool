@@ -1,5 +1,12 @@
 package Model;
 
+import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Customer is the object representation of a customer.
  *
@@ -128,5 +135,11 @@ public class Customer {
     public String toString() {
         return String.format("Customer ID: %d\n\t%s, %s, %d, %s\n\t%s, %s, %s",
                 id, firstName, lastName, age, gender, address, email, profession);
+    }
+    public static ModelAndView message(Request req, Response res) {
+
+        Map<String, Object> params = new HashMap<>();
+        //params.put("name", req.params(":name"));
+        return new ModelAndView(params, "index.ftl");
     }
 }

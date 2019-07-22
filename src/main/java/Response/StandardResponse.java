@@ -2,19 +2,19 @@ package Response;
 
 import com.google.gson.JsonElement;
 
-public class Response {
+public class StandardResponse {
     private StatusResponse status;
     private String message;
     private JsonElement data;
 
-    public Response(StatusResponse status) {
+    public StandardResponse(StatusResponse status) {
         this.status = status;
     }
-    public Response(StatusResponse status, String message) {
+    public StandardResponse(StatusResponse status, String message) {
         this.status = status;
         this.message = message;
     }
-    public Response(StatusResponse status, JsonElement data) {
+    public StandardResponse(StatusResponse status, JsonElement data) {
         this.status = status;
         this.data = data;
     }

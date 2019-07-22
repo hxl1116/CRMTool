@@ -3,5 +3,5 @@
 <properties>
 <comment>Properties</comment>
 <entry key="database_url">src\main\resources\customers.db</entry>
-<entry key="current_id">101</entry>
+<entry key="current_id">103</entry>
 </properties>

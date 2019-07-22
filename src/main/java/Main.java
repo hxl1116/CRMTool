@@ -1,13 +1,22 @@
 import Control.CustomerDOA;
 import Model.Customer;
-import Response.Response;
+import Response.StandardResponse;
 import Response.StatusResponse;
 import com.google.gson.Gson;
 import org.apache.log4j.BasicConfigurator;
+import spark.template.freemarker.FreeMarkerEngine;
+import freemarker.template.Configuration;
+import freemarker.template.Version;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static spark.Spark.*;
@@ -41,7 +50,7 @@ public class Main {
      *
      * @param args the command line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         loadProperties();
 
         customerDOA = new CustomerDOA(
@@ -54,6 +63,10 @@ public class Main {
         while (flag) {
             BasicConfigurator.configure();
 
+            Configuration config = new Configuration(new Version(2, 3, 23));
+            config.setClassForTemplateLoading(Customer.class, "/views");
+
+            get("/", Customer::message, new FreeMarkerEngine(config));
             /**
              * HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
              */
@@ -70,13 +83,15 @@ public class Main {
              * are going to get very messy.
              */
             post("/customers/createCustomer", (request, response) -> {
+                System.out.println(request.body());
                 response.type("application/json");
+                System.out.println(request.body());
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
                 System.out.println(customer.toString());
                 customerDOA.insertCustomer(customer);
 
                 return new Gson()
-                        .toJson(new Response(StatusResponse.SUCCESS));
+                        .toJson(new StandardResponse(StatusResponse.SUCCESS));
             });
 
             /**
@@ -94,11 +109,11 @@ public class Main {
 
                 if (editedCustomer != null) {
                     return new Gson().toJson(
-                            new Response(StatusResponse.SUCCESS,new Gson()
+                            new StandardResponse(StatusResponse.SUCCESS,new Gson()
                                     .toJsonTree(editedCustomer)));
                 } else {
                     return new Gson().toJson(
-                            new Response(StatusResponse.ERROR,new Gson()
+                            new StandardResponse(StatusResponse.ERROR,new Gson()
                                     .toJson("Customer not found or error in edit")));
                 }
             });
@@ -110,7 +125,7 @@ public class Main {
                 response.type("application/json");
                 customerDOA.deleteCustomer(Integer.parseInt(request.params(":id")));
                 return new Gson().toJson(
-                        new Response(StatusResponse.SUCCESS, "user deleted"));
+                        new StandardResponse(StatusResponse.SUCCESS, "user deleted"));
             });
 
             String input = scanner.nextLine();
@@ -207,5 +222,22 @@ public class Main {
      */
     private static void printUsage() {
         System.out.println("Usage: command;parameters (comma separated)");
+    }
+    private String renderContent(String htmlFile) {
+        try {
+            // If you are using maven then your files
+            // will be in a folder called resources.
+            // getResource() gets that folder
+            // and any files you specify.
+            URL url = getClass().getResource(htmlFile);
+
+            // Return a String which has all
+            // the contents of the file.
+            Path path = Paths.get(url.toURI());
+            return new String(Files.readAllBytes(path), Charset.defaultCharset());
+        } catch (IOException | URISyntaxException e) {
+            System.out.println("ERROR: Invalid URL.");
+        }
+        return null;
     }
 }
