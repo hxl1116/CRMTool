@@ -15,7 +15,12 @@ The config.xml file contains the database url and current customer ID for the pr
 property may need to be modified for the user.
 
 ## Usage
-Compile and run. Enter commands through standard input.
+Compile and run. Enter commands through HTTP Requests or standard input.
+
+Running Local: http://localhost:4567/
+
+If you add a Customer to the database and turn the program off, remember to
+update the current_id field in the config.xml file located under src/main/resources/config.xml
 
 ```text
 // Displays formatted customer data

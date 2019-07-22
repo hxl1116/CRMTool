@@ -1,15 +1,10 @@
 package Control;
 
 import Model.Customer;
-import Response.StatusResponse;
-import Response.Response;
 
-import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * CustomerDOA is the data access object for the customer database.
