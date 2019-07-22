@@ -4,7 +4,7 @@ CRM Tool is a Java API used to access customer data from a database
 
 ## Project Status
 CRM Tool currently exists as a desktop CRUD application, but will be updated to a local-machine, web-based, 
-REST-full API.
+REST-full API. A product backlog is located under Projects here on GitHub.
 
 ## Installation
 Clone the project into an IDE. For IntelliJ, open the Database tab on the right sidebar and add the customer.db by
