@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Create Profile</title>
+    <style type="text/css"> <#include "style.css"> </style>
 </head>
 <body>
 <div id="form-container">
     <form name="create-customer-form">
-        <h3>Customer</h3>
+        <h1>Customer</h1>
         <h4>Fill out the fields below.</h4>
         <div>
             <input name="id" placeholder="ID" type="text" tabindex="1" required autofocus>
