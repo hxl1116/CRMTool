@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
-    <style type="text/css"> <#include "style.css"> </style>
+    <style type="text/css"> <#include "../styles/style.css"> </style>
 </head>
 <body>
 <div id="form-container">
     <form name="create-customer-form">
         <h1>Customer</h1>
         <h4>Fill out the fields below.</h4>
-        <div>
-            <input name="id" placeholder="ID" type="text" tabindex="1" required autofocus>
-        </div>
         <div>
             <input name="firstName" placeholder="Your first name" type="text" tabindex="2" required autofocus>
         </div>
@@ -43,7 +40,6 @@
     {
         console.log("made it here");
         var data = {
-            "id": document.getElementsByName("create-customer-form").item(0).elements.namedItem("id").value.toString(),
             "firstName": document.getElementsByName("create-customer-form").item(0).elements.namedItem("firstName").value.toString(),
             "lastName": document.getElementsByName("create-customer-form").item(0).elements.namedItem("lastName").value.toString(),
             "address": document.getElementsByName("create-customer-form").item(0).elements.namedItem("address").value.toString(),
