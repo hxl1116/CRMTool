@@ -1,4 +1,4 @@
-import Control.CustomerDOA;
+import Control.CustomerDAO;
 import Model.Customer;
 import Response.StandardResponse;
 import Response.StatusResponse;
@@ -39,13 +39,13 @@ public class Main {
     // Configuration properties
     private static Properties properties = new Properties();
     // Data access object
-    private static CustomerDOA customerDOA;
+    private static CustomerDAO customerDAO;
 
     // Input loop flag
     private static boolean flag = true;
 
     /**
-     * Loads configuration properties, instantiates the <code>CustomerDOA</code> data access object, and takes in user
+     * Loads configuration properties, instantiates the <code>CustomerDAO</code> data access object, and takes in user
      * input.
      *
      * @param args the command line arguments.
@@ -53,7 +53,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         loadProperties();
 
-        customerDOA = new CustomerDOA(
+        customerDAO = new CustomerDAO(
                 properties.getProperty(DATABASE_URL_PROPERTY),
                 Integer.parseInt(properties.getProperty(CURRENT_ID_PROPERTY))
         );
@@ -67,20 +67,21 @@ public class Main {
             config.setClassForTemplateLoading(Customer.class, "/views");
 
             get("/", Customer::message, new FreeMarkerEngine(config));
-            /**
-             * HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
-             */
-            get("/customers", (req, res)->customerDOA.selectAllCustomers());
 
-            /**
-             * HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
+            /*
+              HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
              */
-            get("/customers/:id", (req,res)->customerDOA.selectCustomer(Integer.parseInt(":id")));
+            get("/customers", (req, res)-> customerDAO.selectAllCustomers());
 
-            /**
-             * HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
-             * the customer to be created. We need to add a system for creating ID's so the user does not create their own ID. Duplicate ID's
-             * are going to get very messy.
+            /*
+              HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
+             */
+            get("/customers/:id", (req,res)-> customerDAO.selectCustomer(Integer.parseInt(":id")));
+
+            /*
+              HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
+              the customer to be created. We need to add a system for creating ID's so the user does not create their own ID. Duplicate ID's
+              are going to get very messy.
              */
             post("/customers/createCustomer", (request, response) -> {
                 System.out.println(request.body());
@@ -88,24 +89,24 @@ public class Main {
                 System.out.println(request.body());
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
                 System.out.println(customer.toString());
-                customerDOA.insertCustomer(customer);
+                customerDAO.insertCustomer(customer);
 
                 return new Gson()
                         .toJson(new StandardResponse(StatusResponse.SUCCESS));
             });
 
-            /**
-             * HTTP Request would look like: http://localhost:4567/customers/updateCustomer  Where the body would be a json object representing
-             * the customer with updated information. ID's can be updated, but this should be removed in the future.
+            /*
+              HTTP Request would look like: http://localhost:4567/customers/updateCustomer  Where the body would be a json object representing
+              the customer with updated information. ID's can be updated, but this should be removed in the future.
              */
             put("/customers/updateCustomer", (request, response) -> {
                 response.type("application/json");
                 Customer toEdit = new Gson().fromJson(request.body(), Customer.class);
 
                 if(toEdit.getId() != 0){
-                    customerDOA.updateCustomer(toEdit);
+                    customerDAO.updateCustomer(toEdit);
                 }
-                Customer editedCustomer = customerDOA.selectCustomer(toEdit.getId()).get(0);
+                Customer editedCustomer = customerDAO.selectCustomer(toEdit.getId()).get(0);
 
                 if (editedCustomer != null) {
                     return new Gson().toJson(
@@ -118,12 +119,12 @@ public class Main {
                 }
             });
 
-            /**
-             * HTTP Request would look like: http://localhost:4567/customers/deleteCustomer/id  Where id of the customer you wish to delete
+            /*
+              HTTP Request would look like: http://localhost:4567/customers/deleteCustomer/id  Where id of the customer you wish to delete
              */
             delete("/customers/deleteCustomer/:id", (request, response) -> {
                 response.type("application/json");
-                customerDOA.deleteCustomer(Integer.parseInt(request.params(":id")));
+                customerDAO.deleteCustomer(Integer.parseInt(request.params(":id")));
                 return new Gson().toJson(
                         new StandardResponse(StatusResponse.SUCCESS, "user deleted"));
             });
@@ -136,17 +137,17 @@ public class Main {
                 switch (command) {
                     case "add":
                         data = parameters.split(",");
-                        Customer newCustomer = new Customer(customerDOA.getCurrentID(), data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), data[5], data[6]);
-                        customerDOA.insertCustomer(newCustomer);
+                        Customer newCustomer = new Customer(customerDAO.getCurrentID(), data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), data[5], data[6]);
+                        customerDAO.insertCustomer(newCustomer);
                         break;
                     case "get":
                         ArrayList<Customer> selectedCustomers;
 
                         if (!parameters.contains(",")) {
                             if (parameters.equals("*") || parameters.equals("all")) {
-                                selectedCustomers = customerDOA.selectAllCustomers();
+                                selectedCustomers = customerDAO.selectAllCustomers();
                             } else {
-                                selectedCustomers = customerDOA.selectCustomer(Integer.parseInt(parameters));
+                                selectedCustomers = customerDAO.selectCustomer(Integer.parseInt(parameters));
                             }
                         } else {
                             int[] ids = new int[parameters.split(",").length];
@@ -154,7 +155,7 @@ public class Main {
                                 ids[i] = Integer.parseInt(parameters.split(",")[i]);
                             }
 
-                            selectedCustomers = customerDOA.selectCustomer(ids);
+                            selectedCustomers = customerDAO.selectCustomer(ids);
                         }
 
                         for (Customer customer : selectedCustomers) {
@@ -164,10 +165,10 @@ public class Main {
                     case "update":
                         data = parameters.split(",");
                         Customer customer = new Customer(Integer.parseInt(data[0]), data[1], data[2], data[3], data[4], Integer.parseInt(data[5]), data[6], data[7]);
-                        customerDOA.updateCustomer(customer);
+                        customerDAO.updateCustomer(customer);
                         break;
                     case "delete":
-                        if (parameters.matches("[0-9]+")) customerDOA.deleteCustomer(Integer.parseInt(parameters));
+                        if (parameters.matches("[0-9]+")) customerDAO.deleteCustomer(Integer.parseInt(parameters));
                         else System.err.println("Invalid customer ID: " + parameters);
                         break;
                     case "exit":
@@ -201,7 +202,7 @@ public class Main {
      */
     private static void saveProperties() {
         try (FileOutputStream outputStream = new FileOutputStream(CONFIG_FILE)) {
-            properties.setProperty("current_id", Integer.toString(customerDOA.getCurrentID()));
+            properties.setProperty("current_id", Integer.toString(customerDAO.getCurrentID()));
             properties.storeToXML(outputStream, PROPERTIES_COMMENT);
         } catch (IOException e) {
             e.printStackTrace();

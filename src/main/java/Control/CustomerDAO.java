@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * CustomerDOA is the data access object for the customer database.
+ * CustomerDAO is the data access object for the customer database.
  *
  * @author Henry Larson
  */
-public class CustomerDOA {
+public class CustomerDAO {
     // Driver prefix for database url
     private static final String DATABASE_URL_PREFIX = "jdbc:sqlite:";
 
@@ -32,12 +32,12 @@ public class CustomerDOA {
     private int currentID;
 
     /**
-     * Creates a new <code>CustomerDOA</code> data access object.
+     * Creates a new <code>CustomerDAO</code> data access object.
      *
      * @param databaseURL the local database url.
      * @param currentID   the current unique customer ID.
      */
-    public CustomerDOA(String databaseURL, int currentID) {
+    public CustomerDAO(String databaseURL, int currentID) {
         this.databaseURL = databaseURL;
         this.currentID = currentID;
     }
