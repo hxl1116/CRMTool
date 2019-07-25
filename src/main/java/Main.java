@@ -71,12 +71,12 @@ public class Main {
             /*
               HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
              */
-            get("/customers", (req, res)-> customerDAO.selectAllCustomers());
+            get("/customers", (req, res) -> customerDAO.selectAllCustomers());
 
             /*
               HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
              */
-            get("/customers/:id", (req,res)-> customerDAO.selectCustomer(Integer.parseInt(":id")));
+            get("/customers/:id", (req, res) -> customerDAO.selectCustomer(Integer.parseInt(":id")));
 
             /*
               HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
@@ -103,18 +103,18 @@ public class Main {
                 response.type("application/json");
                 Customer toEdit = new Gson().fromJson(request.body(), Customer.class);
 
-                if(toEdit.getId() != 0){
+                if (toEdit.getId() != 0) {
                     customerDAO.updateCustomer(toEdit);
                 }
                 Customer editedCustomer = customerDAO.selectCustomer(toEdit.getId()).get(0);
 
                 if (editedCustomer != null) {
                     return new Gson().toJson(
-                            new StandardResponse(StatusResponse.SUCCESS,new Gson()
+                            new StandardResponse(StatusResponse.SUCCESS, new Gson()
                                     .toJsonTree(editedCustomer)));
                 } else {
                     return new Gson().toJson(
-                            new StandardResponse(StatusResponse.ERROR,new Gson()
+                            new StandardResponse(StatusResponse.ERROR, new Gson()
                                     .toJson("Customer not found or error in edit")));
                 }
             });
@@ -224,6 +224,7 @@ public class Main {
     private static void printUsage() {
         System.out.println("Usage: command;parameters (comma separated)");
     }
+
     private String renderContent(String htmlFile) {
         try {
             // If you are using maven then your files
