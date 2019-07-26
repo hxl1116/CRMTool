@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
-    <link href="../styles/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
 <div id="content-wrapper">
-    <h1>Error</h1>
+    <h1>Success</h1>
     <a href="/">Back to Form</a>
 </div>
 </body>

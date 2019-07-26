@@ -3,7 +3,11 @@ import Model.Customer;
 import Response.StandardResponse;
 import Response.StatusResponse;
 import com.google.gson.Gson;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
@@ -28,17 +32,24 @@ import static spark.Spark.*;
  * @author Henry Larson
  */
 public class Main {
-    // Configuration variables
+    // Main class logger
+    private static final Logger LOGGER = Logger.getLogger(Main.class);
+
+    // DAO configuration variables
     private static final String CONFIG_FILE = "src/main/resources/config.xml";
     private static final String PROPERTIES_COMMENT = "Properties";
     private static final String DATABASE_URL_PROPERTY = "database_url";
     private static final String CURRENT_ID_PROPERTY = "current_id";
+    private static Properties properties = new Properties();
+
+    // Freemarker configuration variables
+    private static final Version CONFIG_VERSION = Configuration.VERSION_2_3_26;
+    private static final Configuration CONFIGURATION = new Configuration(CONFIG_VERSION);
+    private static final String TEMPLATE_DIRECTORY = "/public/views/";
 
     // Scanner for user input
     private static final Scanner scanner = new Scanner(System.in);
 
-    // Configuration properties
-    private static Properties properties = new Properties();
     // Data access object
     private static CustomerDAO customerDAO;
 
@@ -51,92 +62,75 @@ public class Main {
      *
      * @param args the command line arguments.
      */
-    public static void main(String[] args) throws IOException {
-        loadProperties();
-
-        customerDAO = new CustomerDAO(
-                properties.getProperty(DATABASE_URL_PROPERTY),
-                Integer.parseInt(properties.getProperty(CURRENT_ID_PROPERTY))
-        );
-
+    public static void main(String[] args) {
+        configureDAO();
+        configureLogger();
+        configureFreemarker();
         printUsage();
 
-        while (flag) {
-            staticFileLocation("/public");
-            BasicConfigurator.configure();
+        // Gets the splash page
+        get("/", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                new ModelAndView(new HashMap<String, Object>(), "index.ftl")
+        ));
 
-            Configuration config = new Configuration(new Version(2, 3, 23));
-            config.setClassForTemplateLoading(Customer.class, "/public/views");
+        // Gets a successful status page
+        get("/success", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                new ModelAndView(new HashMap<String, Object>(), "success.ftl")
+        ));
 
-            get("/", Customer::message, new FreeMarkerEngine(config));
+        // Gets an error status page
+        get("/error", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                new ModelAndView(new HashMap<String, Object>(), "error.ftl")
+        ));
 
-            get("/success", Customer::successMessage, new FreeMarkerEngine(config));
+        // Customer paths
+        path("/customers", () -> {
+            // Gets all customers from the database
+            get("/show", (request, response) -> customerDAO.selectAllCustomers());
 
-            get("/error", Customer::failureMessage, new FreeMarkerEngine(config));
+            // Gets the customer from the database with the specified ID
+            get("/show/:id", (request, response) -> customerDAO.selectCustomer(
+                    Integer.parseInt(request.params("id"))
+            ));
 
-            /*
-              HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
-             */
-            get("/customers", (req, res) -> customerDAO.selectAllCustomers());
-
-            /*
-              HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
-             */
-            get("/customers/:id", (req, res) -> customerDAO.selectCustomer(Integer.parseInt(req.params(":id"))));
-
-            /*
-              HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
-              the customer to be created. We need to add a system for creating ID's so the user does not create their own ID. Duplicate ID's
-              are going to get very messy.
-             */
-            post("/customers/createCustomer", (request, response) -> {
-                System.out.println(request.body());
-                response.type("application/json");
-                System.out.println(request.body());
+            // Adds a new customer to the database
+            post("/create", (request, response) -> {
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
-                System.out.println(customer.toString());
                 customerDAO.insertCustomer(customer);
                 saveProperties();
 
-                return new Gson()
-                        .toJson(new StandardResponse(StatusResponse.SUCCESS));
-            });
-
-            /*
-              HTTP Request would look like: http://localhost:4567/customers/updateCustomer  Where the body would be a json object representing
-              the customer with updated information. ID's can be updated, but this should be removed in the future.
-             */
-            put("/customers/updateCustomer", (request, response) -> {
                 response.type("application/json");
-                Customer toEdit = new Gson().fromJson(request.body(), Customer.class);
-
-                if (toEdit.getId() != 0) {
-                    customerDAO.updateCustomer(toEdit);
-                }
-                Customer editedCustomer = customerDAO.selectCustomer(toEdit.getId()).get(0);
-
-                if (editedCustomer != null) {
-                    return new Gson().toJson(
-                            new StandardResponse(StatusResponse.SUCCESS, new Gson()
-                                    .toJsonTree(editedCustomer)));
-                } else {
-                    return new Gson().toJson(
-                            new StandardResponse(StatusResponse.ERROR, new Gson()
-                                    .toJson("Customer not found or error in edit")));
-                }
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.CREATED,
+                        "Customer created."
+                ));
             });
 
-            /*
-              HTTP Request would look like: http://localhost:4567/customers/deleteCustomer/id  Where id of the customer you wish to delete
-             */
-            delete("/customers/deleteCustomer/:id", (request, response) -> {
+            // Updates a customer in the database with the specified ID
+            // TODO: 7/26/2019 Select customer from database and update with new information
+            put("/update/:id", (request, response) -> {
                 response.type("application/json");
-                customerDAO.deleteCustomer(Integer.parseInt(request.params(":id")));
-                saveProperties();
-                return new Gson().toJson(
-                        new StandardResponse(StatusResponse.SUCCESS, "user deleted"));
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.NOT_IMPLEMENTED,
+                        "Customer information updating has note been implemented."
+                ));
             });
 
+            // Deletes a customer from the database with the specified ID
+            delete("/delete/:id", (request, response) -> {
+                customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
+
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.NO_CONTENT,
+                        "Customer deleted."
+                ));
+            });
+
+            // Saves the current_id property after each request
+            after((request, response) -> saveProperties());
+        });
+
+        while (flag) {
             String input = scanner.nextLine();
             if (input.contains(";")) {
                 String command = input.substring(0, input.indexOf(";"));
@@ -145,7 +139,16 @@ public class Main {
                 switch (command) {
                     case "add":
                         data = parameters.split(",");
-                        Customer newCustomer = new Customer(customerDAO.getCurrentID(), data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), data[5], data[6]);
+                        Customer newCustomer = new Customer(
+                                customerDAO.getCurrentID(),
+                                data[0],
+                                data[1],
+                                data[2],
+                                data[3],
+                                Integer.parseInt(data[4]),
+                                data[5],
+                                data[6]
+                        );
                         customerDAO.insertCustomer(newCustomer);
                         saveProperties();
                         break;
@@ -173,11 +176,22 @@ public class Main {
                         break;
                     case "update":
                         data = parameters.split(",");
-                        Customer customer = new Customer(Integer.parseInt(data[0]), data[1], data[2], data[3], data[4], Integer.parseInt(data[5]), data[6], data[7]);
+                        Customer customer = new Customer(
+                                Integer.parseInt(data[0]),
+                                data[1],
+                                data[2],
+                                data[3],
+                                data[4],
+                                Integer.parseInt(data[5]),
+                                data[6],
+                                data[7]
+                        );
                         customerDAO.updateCustomer(customer);
                         break;
                     case "delete":
-                        if (parameters.matches("[0-9]+")) customerDAO.deleteCustomer(Integer.parseInt(parameters));
+                        if (parameters.matches("[0-9]+")) customerDAO.deleteCustomer(
+                                Integer.parseInt(parameters)
+                        );
                         else System.err.println("Invalid customer ID: " + parameters);
                         saveProperties();
                         break;
@@ -199,12 +213,32 @@ public class Main {
     /**
      * Loads configuration properties from the config.xml file.
      */
-    private static void loadProperties() {
+    private static void configureDAO() {
         try (FileInputStream inputStream = new FileInputStream(CONFIG_FILE)) {
             properties.loadFromXML(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            customerDAO = new CustomerDAO(
+                    properties.getProperty(DATABASE_URL_PROPERTY),
+                    Integer.parseInt(properties.getProperty(CURRENT_ID_PROPERTY))
+            );
         }
+    }
+
+    private static void configureFreemarker() {
+        staticFileLocation("/public");
+
+        CONFIGURATION.setClassForTemplateLoading(Main.class, TEMPLATE_DIRECTORY);
+        CONFIGURATION.setObjectWrapper(new DefaultObjectWrapper(CONFIG_VERSION));
+        CONFIGURATION.setDefaultEncoding("UTF-8");
+        CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        CONFIGURATION.setLogTemplateExceptions(false);
+    }
+
+    private static void configureLogger() {
+        LOGGER.addAppender(new ConsoleAppender());
+        BasicConfigurator.configure();
     }
 
     /**
@@ -220,36 +254,18 @@ public class Main {
     }
 
     /**
-     * Prints an error message for an unknown command.
-     *
-     * @param input the unknown command.
-     */
-    private static void printCommandError(String input) {
-        System.err.println("Unknown command: " + input);
-    }
-
-    /**
      * Prints the usage for standard input to access the API.
      */
     private static void printUsage() {
         System.out.println("Usage: command;parameters (comma separated)");
     }
 
-    private String renderContent(String htmlFile) {
-        try {
-            // If you are using maven then your files
-            // will be in a folder called resources.
-            // getResource() gets that folder
-            // and any files you specify.
-            URL url = getClass().getResource(htmlFile);
-
-            // Return a String which has all
-            // the contents of the file.
-            Path path = Paths.get(url.toURI());
-            return new String(Files.readAllBytes(path), Charset.defaultCharset());
-        } catch (IOException | URISyntaxException e) {
-            System.out.println("ERROR: Invalid URL.");
-        }
-        return null;
+    /**
+     * Prints an error message for an unknown command.
+     *
+     * @param input the unknown command.
+     */
+    private static void printCommandError(String input) {
+        System.err.println("Unknown command: " + input);
     }
 }
