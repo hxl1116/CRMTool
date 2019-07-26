@@ -69,63 +69,61 @@ public class Main {
                 new ModelAndView(new HashMap<String, Object>(), "index.ftl")
         ));
 
-        // Webclient paths
-        path("/", () -> {
-            // Gets a successful status page
-            get("/success", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                    new ModelAndView(new HashMap<String, Object>(), "success.ftl")
+        // Gets a successful status page
+        get("/success", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                new ModelAndView(new HashMap<String, Object>(), "success.ftl")
+        ));
+
+        // Gets an error status page
+        get("/error", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                new ModelAndView(new HashMap<String, Object>(), "error.ftl")
+        ));
+
+        // Customer paths
+        path("/customers", () -> {
+            // Gets all customers from the database
+            get("/show", (request, response) -> customerDAO.selectAllCustomers());
+
+            // Gets the customer from the database with the specified ID
+            get("/show/:id", (request, response) -> customerDAO.selectCustomer(
+                    Integer.parseInt(request.params("id"))
             ));
 
-            // Gets an error status page
-            get("/error", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                    new ModelAndView(new HashMap<String, Object>(), "error.ftl")
-            ));
+            // Adds a new customer to the database
+            post("/create", (request, response) -> {
+                Customer customer = new Gson().fromJson(request.body(), Customer.class);
+                customerDAO.insertCustomer(customer);
+                saveProperties();
 
-            // Customer paths
-            path("customers/", () -> {
-                // Gets all customers from the database
-                get("show/", (request, response) -> customerDAO.selectAllCustomers());
-
-                // Gets the customer from the database with the specified ID
-                get("show/:id", (request, response) -> customerDAO.selectCustomer(
-                        Integer.parseInt(request.params("id"))
+                response.type("application/json");
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.CREATED,
+                        "Customer created."
                 ));
-
-                // Adds a new customer to the database
-                post("create/", (request, response) -> {
-                    Customer customer = new Gson().fromJson(request.body(), Customer.class);
-                    customerDAO.insertCustomer(customer);
-                    saveProperties();
-
-                    return new Gson().toJson(new StandardResponse(
-                            StatusResponse.CREATED,
-                            "Customer created."
-                    ));
-                });
-
-                // Updates a customer in the database with the specified ID
-                put("update/:id", (request, response) -> {
-                    customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
-
-                    return new Gson().toJson(new StandardResponse(
-                            StatusResponse.NO_CONTENT,
-                            "Customer updated."
-                    ));
-                });
-
-                // Deletes a customer from the database with the specified ID
-                delete("/delete/:id", (request, response) -> {
-                    customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
-
-                    return new Gson().toJson(new StandardResponse(
-                            StatusResponse.NO_CONTENT,
-                            "Customer deleted."
-                    ));
-                });
-
-                // Saves the current_id property after each request
-                after((request, response) -> saveProperties());
             });
+
+            // Updates a customer in the database with the specified ID
+            // TODO: 7/26/2019 Select customer from database and update with new information
+            put("/update/:id", (request, response) -> {
+                response.type("application/json");
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.NOT_IMPLEMENTED,
+                        "Customer information updating has note been implemented."
+                ));
+            });
+
+            // Deletes a customer from the database with the specified ID
+            delete("/delete/:id", (request, response) -> {
+                customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
+
+                return new Gson().toJson(new StandardResponse(
+                        StatusResponse.NO_CONTENT,
+                        "Customer deleted."
+                ));
+            });
+
+            // Saves the current_id property after each request
+            after((request, response) -> saveProperties());
         });
 
         while (flag) {
