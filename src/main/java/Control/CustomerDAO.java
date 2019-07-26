@@ -120,7 +120,7 @@ public class CustomerDAO {
      *
      * @param customer an object representing a customer
      */
-    public String insertCustomer(Customer customer) {
+    public void insertCustomer(Customer customer) {
         try (PreparedStatement statement = getConnection().prepareStatement(INSERT_CUSTOMER_QUERY)) {
             statement.setInt(1, currentID);
             statement.setString(2, customer.getFirstName());
@@ -137,7 +137,6 @@ public class CustomerDAO {
         } finally {
             currentID++;
         }
-        return "Successfully added Customer.";
     }
 
     /**
@@ -186,7 +185,7 @@ public class CustomerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (currentID-1 == id) currentID--;
+            if (currentID - 1 == id) currentID--;
         }
     }
 

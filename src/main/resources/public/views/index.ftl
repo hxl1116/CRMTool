@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
-    <link rel="script" href="webjars/jquery/3.4.1">
     <link rel="stylesheet" href="../styles/style.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="script" href="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
     <script type="text/javascript">
         function submitForm() {
             let data = {

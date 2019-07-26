@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
@@ -30,6 +32,9 @@ import static spark.Spark.*;
  * @author Henry Larson
  */
 public class Main {
+    // Main class logger
+    private static final Logger LOGGER = Logger.getLogger(Main.class);
+
     // DAO configuration variables
     private static final String CONFIG_FILE = "src/main/resources/config.xml";
     private static final String PROPERTIES_COMMENT = "Properties";
@@ -59,10 +64,9 @@ public class Main {
      */
     public static void main(String[] args) {
         configureDAO();
+        configureLogger();
         configureFreemarker();
         printUsage();
-
-        BasicConfigurator.configure();
 
         // Gets the splash page
         get("/", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
@@ -230,6 +234,11 @@ public class Main {
         CONFIGURATION.setDefaultEncoding("UTF-8");
         CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         CONFIGURATION.setLogTemplateExceptions(false);
+    }
+
+    private static void configureLogger() {
+        LOGGER.addAppender(new ConsoleAppender());
+        BasicConfigurator.configure();
     }
 
     /**
