@@ -186,7 +186,7 @@ public class CustomerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (currentID == id) currentID--;
+            if (currentID-1 == id) currentID--;
         }
     }
 
