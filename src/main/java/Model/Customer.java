@@ -136,22 +136,22 @@ public class Customer {
         return String.format("Customer ID: %d\n\t%s, %s, %d, %s\n\t%s, %s, %s",
                 id, firstName, lastName, age, gender, address, email, profession);
     }
-    public static ModelAndView message(Request req, Response res) {
 
+    public static ModelAndView message(Request req, Response res) {
         Map<String, Object> params = new HashMap<>();
         //params.put("name", req.params(":name"));
         return new ModelAndView(params, "index.ftl");
     }
+
     public static ModelAndView successMessage(Request req, Response res) {
-
         Map<String, Object> params = new HashMap<>();
         //params.put("name", req.params(":name"));
-        return new ModelAndView(params, "success_page.ftl");
+        return new ModelAndView(params, "success.ftl");
     }
-    public static ModelAndView failureMessage(Request req, Response res) {
 
+    public static ModelAndView failureMessage(Request req, Response res) {
         Map<String, Object> params = new HashMap<>();
         //params.put("name", req.params(":name"));
-        return new ModelAndView(params, "failure_page.ftl");
+        return new ModelAndView(params, "error.ftl");
     }
 }
