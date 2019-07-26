@@ -4,6 +4,7 @@ import Response.StandardResponse;
 import Response.StatusResponse;
 import com.google.gson.Gson;
 import org.apache.log4j.BasicConfigurator;
+import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
@@ -61,12 +62,17 @@ public class Main {
         printUsage();
 
         while (flag) {
+            staticFileLocation("/public");
             BasicConfigurator.configure();
 
             Configuration config = new Configuration(new Version(2, 3, 23));
-            config.setClassForTemplateLoading(Customer.class, "/views");
+            config.setClassForTemplateLoading(Customer.class, "/public/views");
 
             get("/", Customer::message, new FreeMarkerEngine(config));
+
+            get("/success", Customer::successMessage, new FreeMarkerEngine(config));
+
+            get("/error", Customer::failureMessage, new FreeMarkerEngine(config));
 
             /*
               HTTP Request would look like: http://localhost:4567/customers  This gets all the customers in the database.
@@ -76,7 +82,7 @@ public class Main {
             /*
               HTTP Request would look like: http://localhost:4567/customers/id  Where id is the customer you wish to retrieve.
              */
-            get("/customers/:id", (req, res) -> customerDAO.selectCustomer(Integer.parseInt(":id")));
+            get("/customers/:id", (req, res) -> customerDAO.selectCustomer(Integer.parseInt(req.params(":id"))));
 
             /*
               HTTP Request would look like: http://localhost:4567/customers/createCustomer  Where the body would be a json object representing
@@ -90,6 +96,7 @@ public class Main {
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
                 System.out.println(customer.toString());
                 customerDAO.insertCustomer(customer);
+                saveProperties();
 
                 return new Gson()
                         .toJson(new StandardResponse(StatusResponse.SUCCESS));
@@ -125,6 +132,7 @@ public class Main {
             delete("/customers/deleteCustomer/:id", (request, response) -> {
                 response.type("application/json");
                 customerDAO.deleteCustomer(Integer.parseInt(request.params(":id")));
+                saveProperties();
                 return new Gson().toJson(
                         new StandardResponse(StatusResponse.SUCCESS, "user deleted"));
             });
@@ -139,6 +147,7 @@ public class Main {
                         data = parameters.split(",");
                         Customer newCustomer = new Customer(customerDAO.getCurrentID(), data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), data[5], data[6]);
                         customerDAO.insertCustomer(newCustomer);
+                        saveProperties();
                         break;
                     case "get":
                         ArrayList<Customer> selectedCustomers;
@@ -170,6 +179,7 @@ public class Main {
                     case "delete":
                         if (parameters.matches("[0-9]+")) customerDAO.deleteCustomer(Integer.parseInt(parameters));
                         else System.err.println("Invalid customer ID: " + parameters);
+                        saveProperties();
                         break;
                     case "exit":
                         flag = false;

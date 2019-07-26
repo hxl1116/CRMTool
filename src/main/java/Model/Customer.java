@@ -142,4 +142,16 @@ public class Customer {
         //params.put("name", req.params(":name"));
         return new ModelAndView(params, "index.ftl");
     }
+    public static ModelAndView successMessage(Request req, Response res) {
+
+        Map<String, Object> params = new HashMap<>();
+        //params.put("name", req.params(":name"));
+        return new ModelAndView(params, "success_page.ftl");
+    }
+    public static ModelAndView failureMessage(Request req, Response res) {
+
+        Map<String, Object> params = new HashMap<>();
+        //params.put("name", req.params(":name"));
+        return new ModelAndView(params, "failure_page.ftl");
+    }
 }

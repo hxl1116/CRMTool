@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
-    <style type="text/css"> <#include "../styles/style.css"> </style>
+    <link href="../styles/style.css" rel="stylesheet" />
 </head>
 <body>
 <div id="form-container">
@@ -35,10 +35,10 @@
             <button type="button" onclick="submitForm()">Submit</button>
         </div>
     </form>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
     function submitForm()
     {
-        console.log("made it here");
         var data = {
             "firstName": document.getElementsByName("create-customer-form").item(0).elements.namedItem("firstName").value.toString(),
             "lastName": document.getElementsByName("create-customer-form").item(0).elements.namedItem("lastName").value.toString(),
@@ -48,13 +48,21 @@
             "gender": document.getElementsByName("create-customer-form").item(0).elements.namedItem("gender").value.toString(),
             "profession": document.getElementsByName("create-customer-form").item(0).elements.namedItem("profession").value.toString()
         };
-        console.log(data);
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", '/customers/createCustomer',false);
-
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(JSON.stringify(data))
-
+        $.ajax({
+            url: '/customers/createCustomer',
+            data: JSON.stringify(data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                console.log(data['status']);
+                location.href = "/success"
+            },
+            failure: function (errMsg) {
+                console.log(errMsg);
+                location.href = "/error"
+            }
+        });
     }
 </script>
 </div>
