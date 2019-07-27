@@ -14,6 +14,7 @@ import java.util.Arrays;
 public class CustomerDAO {
     // Driver prefix for database url
     private static final String DATABASE_URL_PREFIX = "jdbc:sqlite:";
+    private static final String USER_PROFILE = System.getenv("USERPROFILE");
 
     // SELECT query for all customers
     private static final String SELECT_ALL_CUSTOMERS_QUERY = "SELECT * FROM Customer";
@@ -38,7 +39,7 @@ public class CustomerDAO {
      * @param currentID   the current unique customer ID.
      */
     public CustomerDAO(String databaseURL, int currentID) {
-        this.databaseURL = databaseURL;
+        this.databaseURL = String.format("%s%s%s", DATABASE_URL_PREFIX, USER_PROFILE, databaseURL);
         this.currentID = currentID;
     }
 
@@ -49,7 +50,7 @@ public class CustomerDAO {
      * @throws SQLException the exception thrown when connection fails.
      */
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DATABASE_URL_PREFIX + databaseURL);
+        return DriverManager.getConnection(databaseURL);
     }
 
     /**
