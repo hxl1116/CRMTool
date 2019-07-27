@@ -1,0 +1,85 @@
+body {
+    background-color: #4f4f4f;
+    color: #555555;
+    font: 16px Arial, Helvetica, sans-serif;
+    line-height: 1.6em;
+    margin: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.button {
+    background-color: #333333;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+}
+
+.button:hover {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 10px 15px;
+    border: none;
+}
+
+.nav-bar {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.nav-bar ul {
+    padding: 0;
+    list-style: none;
+}
+
+.nav-bar li {
+    display: inline;
+}
+
+.nav-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    padding-right: 15px;
+}
+
+.customer-form {
+    width: 20%;
+    padding: 20px 0;
+}
+
+.customer-form .form-group {
+    padding-bottom: 15px;
+}
+
+.customer-form label {
+    color: #ffffff;
+    display: block;
+}
+
+.customer-form input[type="text"],
+.customer-form input[type="number"],
+.customer-form input[type="email"],
+.customer-form input[list] {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 8px;
+    width: 40%;
+}
+
+#main-header {
+    background-color: bisque;
+    color: #ffffff;
+}
+
+#main-footer {
+    background-color: #333333;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 40px;
+}

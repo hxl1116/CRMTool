@@ -70,7 +70,7 @@ public class Main {
 
         // Gets the splash page
         get("/", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                new ModelAndView(new HashMap<String, Object>(), "index.ftl")
+                new ModelAndView(new HashMap<String, Object>(), "index.html")
         ));
 
         // Gets a successful status page
