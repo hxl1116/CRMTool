@@ -1,0 +1,10 @@
+CREATE TABLE Customer (
+    ID INTEGER PRIMARY KEY,
+    FirstName TEXT NOT NULL,
+    LastName TEXT NOT NULL,
+    Address TEXT NOT NULL,
+    Email TEXT NOT NULL,
+    Age INTEGER NOT NULL,
+    Gender TEXT NOT NULL,
+    Profession TEXT NOT NULL
+);
