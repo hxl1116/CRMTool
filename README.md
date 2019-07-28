@@ -2,10 +2,6 @@
 
 CRM Tool is a Java API used to access customer data from a database.
 
-## Project Status
-CRM Tool currently exists as a desktop CRUD application, but will be updated to a local-machine, web-based, 
-REST-ful API. A product backlog is located under Projects here on GitHub.
-
 ## Installation
 Clone the project into an IDE. For IntelliJ, open the Database tab on the right sidebar and add the customer.db by
 selecting "Data Source from Path".
@@ -21,7 +17,7 @@ unsuccessful, the property can be modified by the user.
 Compile and run. The Spark jetty runs on [localhost](http://localhost:4567/) with the default port, <em>4567</em>. 
 Enter commands through standard input or HTTP routes.
 
-<h4>I/O Commands:</h4>
+#### I/O Commands
 ```text
 // Displays formatted customer data
 get;id
@@ -36,7 +32,7 @@ update;id,firstName,lastName,address,email,age,gender,profession
 delete;id
 ```
 
-<h4>Routes:</h4>
+#### Routes
 ```text
 // Default route, displays the customer creation form
 http://localhost:4567/
@@ -69,3 +65,7 @@ This project is being worked on by [Yasiru Karunawansa](https://github.com/yasir
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Project Status
+CRM Tool currently exists as a desktop CRUD application, but will be updated to a local-machine, web-based, 
+REST-ful API. A product backlog is located under Projects here on GitHub.
