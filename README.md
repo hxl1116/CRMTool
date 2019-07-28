@@ -35,6 +35,7 @@ update;id,firstName,lastName,address,email,age,gender,profession
 // Deletes a customer from the database
 delete;id
 ```
+
 <h4>Routes:</h4>
 ```text
 // Default route, displays the customer creation form
