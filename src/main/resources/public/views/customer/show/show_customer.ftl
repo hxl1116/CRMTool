@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>CRM Tool</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../../css/style.css">
 </head>
 <body>
 <header id="main-header">
     <div class="container">
-        <h1>Show Customers</h1>
+        <h1>Customers</h1>
     </div>
 </header>
 <nav class="nav-bar">
     <div class="container">
         <ul>
-            <li><a href="http://localhost:4567/index.html">Index</a></li>
-            <li><a href="#">Create Customer</a></li>
+            <li><a href="http://localhost:4567/">Home</a></li>
+            <li><a href="http://localhost:4567/customer/add">Create Customer</a></li>
             <li><a href="#">Update Customer</a></li>
             <li><a href="#">Delete Customer</a></li>
         </ul>
