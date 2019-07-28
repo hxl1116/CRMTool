@@ -1,17 +1,27 @@
 $(document).ready(function () {
-    $('#submit-btn').click(function (event) {
+    let customerForm = $('#customer-form');
+    customerForm.submit(function (event) {
         event.preventDefault();
 
-        let customerForm = document.getElementById('customer-form');
         let data = {
-            'firstName': customerForm.elements.namedItem('firstName').value.toString(),
-            'lastName': customerForm.elements.namedItem('lastName').value.toString(),
-            'address': customerForm.elements.namedItem('address').value.toString(),
-            'email': customerForm.elements.namedItem('email').value.toString(),
-            'age': customerForm.elements.namedItem('age').value.toString(),
-            'gender': customerForm.elements.namedItem('gender').value.toString(),
-            'profession': customerForm.elements.namedItem('profession').value.toString()
+            'firstName': $('#first-name').val().toString(),
+            'lastName': $('#last-name').val().toString(),
+            'address': $('#address').val().toString(),
+            'email': $('#email').val().toString(),
+            'age': $('#age').val().toString(),
+            'gender': $('#gender').val().toString(),
+            'profession': $('#profession').val().toString()
         };
+
+        // let data = {
+        //     'firstName': customerForm.elements.namedItem('firstName').value.toString(),
+        //     'lastName': customerForm.elements.namedItem('lastName').value.toString(),
+        //     'address': customerForm.elements.namedItem('address').value.toString(),
+        //     'email': customerForm.elements.namedItem('email').value.toString(),
+        //     'age': customerForm.elements.namedItem('age').value.toString(),
+        //     'gender': customerForm.elements.namedItem('gender').value.toString(),
+        //     'profession': customerForm.elements.namedItem('profession').value.toString()
+        // };
 
         $.post(
             '/customers/create/submit',

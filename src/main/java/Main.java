@@ -86,12 +86,15 @@ public class Main {
         // Customer paths
         path("/customers", () -> {
             // Gets all customers from the database
-            get("/show", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                    new ModelAndView(
-                            new HashMap<String, Object>(),
-                            "customers/show_customers.html"
-                    )
-            ));
+            get("/show", (request, response) -> {
+                Map<String, Object> model = new HashMap<>();
+                model.put("customers", customerDAO.selectAllCustomers());
+
+                response.status(StatusResponse.OK.getCode());
+                return new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(model, "customers/show_customers.ftl")
+                );
+            });
 
             // Gets the customer from the database with the specified ID
             get("/show/:id", (request, response) -> customerDAO.selectCustomer(
@@ -112,20 +115,24 @@ public class Main {
                     customerDAO.insertCustomer(customer);
                     saveProperties();
 
-                    response.type("application/json");
-                    return new Gson().toJson(new StandardResponse(
-                            StatusResponse.CREATED,
-                            "Customer created."
-                    ));
+                    response.status(StatusResponse.CREATED.getCode());
+
+                    return new Gson().toJson(customerDAO.selectCustomer(customer.getId()).get(0).toString());
                 });
 
-                get("/success", (request, response) ->
-                        new Gson().toJson(new StandardResponse(StatusResponse.OK))
-                );
+                get("/success", (request, response) -> {
+                    response.status(StatusResponse.OK.getCode());
+                    return new FreeMarkerEngine(CONFIGURATION).render(
+                            new ModelAndView(new HashMap<String, Object>(), "customers/create/success.html")
+                    );
+                });
 
-                get("/error", (request, response) ->
-                        new Gson().toJson(new StandardResponse(StatusResponse.INTERNAL_SERVER_ERROR))
-                );
+                get("/error", (request, response) -> {
+                    response.status(StatusResponse.INTERNAL_SERVER_ERROR.getCode());
+                    return new FreeMarkerEngine(CONFIGURATION).render(
+                            new ModelAndView(new HashMap<String, Object>(), "customers/create/error.html")
+                    );
+                });
             });
 
             // Updates a customer in the database with the specified ID
