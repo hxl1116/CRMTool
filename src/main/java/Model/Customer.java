@@ -146,12 +146,12 @@ public class Customer {
     public static ModelAndView successMessage(Request req, Response res) {
         Map<String, Object> params = new HashMap<>();
         //params.put("name", req.params(":name"));
-        return new ModelAndView(params, "success.ftl");
+        return new ModelAndView(params, "success.html");
     }
 
     public static ModelAndView failureMessage(Request req, Response res) {
         Map<String, Object> params = new HashMap<>();
         //params.put("name", req.params(":name"));
-        return new ModelAndView(params, "error.ftl");
+        return new ModelAndView(params, "error.html");
     }
 }

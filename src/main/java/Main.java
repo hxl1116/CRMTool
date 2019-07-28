@@ -74,36 +74,58 @@ public class Main {
         ));
 
         // Gets a successful status page
-        get("/success", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                new ModelAndView(new HashMap<String, Object>(), "success.ftl")
-        ));
-
+//        get("/success", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+//                new ModelAndView(new HashMap<String, Object>(), "success.html")
+//        ));
+//
         // Gets an error status page
-        get("/error", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                new ModelAndView(new HashMap<String, Object>(), "error.ftl")
-        ));
+//        get("/error", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+//                new ModelAndView(new HashMap<String, Object>(), "error.html")
+//        ));
 
         // Customer paths
         path("/customers", () -> {
             // Gets all customers from the database
-            get("/show", (request, response) -> customerDAO.selectAllCustomers());
+            get("/show", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                    new ModelAndView(
+                            new HashMap<String, Object>(),
+                            "customers/show_customers.html"
+                    )
+            ));
 
             // Gets the customer from the database with the specified ID
             get("/show/:id", (request, response) -> customerDAO.selectCustomer(
                     Integer.parseInt(request.params("id"))
             ));
 
-            // Adds a new customer to the database
-            post("/create", (request, response) -> {
-                Customer customer = new Gson().fromJson(request.body(), Customer.class);
-                customerDAO.insertCustomer(customer);
-                saveProperties();
-
-                response.type("application/json");
-                return new Gson().toJson(new StandardResponse(
-                        StatusResponse.CREATED,
-                        "Customer created."
+            path("/create", () -> {
+                get("/new", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(
+                                new HashMap<String, Object>(),
+                                "customers/create/create_customer.html"
+                        )
                 ));
+
+                // Adds a new customer to the database
+                post("/submit", (request, response) -> {
+                    Customer customer = new Gson().fromJson(request.body(), Customer.class);
+                    customerDAO.insertCustomer(customer);
+                    saveProperties();
+
+                    response.type("application/json");
+                    return new Gson().toJson(new StandardResponse(
+                            StatusResponse.CREATED,
+                            "Customer created."
+                    ));
+                });
+
+                get("/success", (request, response) ->
+                        new Gson().toJson(new StandardResponse(StatusResponse.OK))
+                );
+
+                get("/error", (request, response) ->
+                        new Gson().toJson(new StandardResponse(StatusResponse.INTERNAL_SERVER_ERROR))
+                );
             });
 
             // Updates a customer in the database with the specified ID

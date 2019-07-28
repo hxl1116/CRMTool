@@ -12,6 +12,14 @@ body {
     overflow: hidden;
 }
 
+.container h2 {
+    color: #ffffff;
+}
+
+.container p {
+    color: #ffffff;
+}
+
 .button {
     background-color: #333333;
     color: #ffffff;
@@ -52,19 +60,19 @@ body {
     padding: 20px 0;
 }
 
-.customer-form .form-group {
-    padding-bottom: 15px;
+.form-group {
+    margin-top: 10px;
 }
 
-.customer-form label {
+.form-group label {
     color: #ffffff;
     display: block;
 }
 
-.customer-form input[type="text"],
-.customer-form input[type="number"],
-.customer-form input[type="email"],
-.customer-form input[list] {
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[list] {
     background-color: #ffffff;
     color: #333333;
     padding: 8px;
