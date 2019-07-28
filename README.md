@@ -21,8 +21,9 @@ unsuccessful, the property can be modified by the user.
 Compile and run. The Spark jetty runs on [localhost](http://localhost:4567/) with the default port, <em>4567</em>. 
 Enter commands through standard input or HTTP routes.
 
-<h4>I/O Commands:</h4>
 ```text
+/* I/O Commands */
+
 // Displays formatted customer data
 get;id
 
@@ -34,10 +35,9 @@ update;id,firstName,lastName,address,email,age,gender,profession
 
 // Deletes a customer from the database
 delete;id
-```
 
-<h4>Routes:</h4>
-```text
+/* Routes */
+
 // Default route, displays the customer creation form
 http://localhost:4567/
 
