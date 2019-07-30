@@ -36,6 +36,8 @@ public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     // DAO configuration variables
+    private static final String USER_PROFILE = System.getenv("USERPROFILE");
+    private static final String DATABASE_DRIVER_PREFIX = "jdbc:sqlite:";
     private static final String CONFIG_FILE = "src/main/resources/config.xml";
     private static final String PROPERTIES_COMMENT = "Properties";
     private static final String DATABASE_URL_PROPERTY = "database_url";
@@ -82,6 +84,7 @@ public class Main {
         // Customer paths
         path("/customer", () -> {
             path("/show", () -> {
+                // Gets the customer page and displays all customers in the database
                 get("/all", (request, response) -> {
                     Map<String, Object> model = new HashMap<>();
                     model.put("customers", customerDAO.selectAllCustomers());
@@ -91,6 +94,8 @@ public class Main {
                             new ModelAndView(model, "customer/show/show_customer.ftl")
                     );
                 });
+
+                // Gets the customer page and displays the customer in the database with the specified ID
                 get("/:id", (request, response) -> {
                     Map<String, Object> model = new HashMap<>();
                     model.put("customers", customerDAO.selectCustomer(Integer.parseInt(request.params("id"))));
@@ -101,50 +106,62 @@ public class Main {
                     );
                 });
             });
+            // Gets the customer form page
             // TODO: 7/28/2019 Get new customer and display on success page.
             get("/add", (request, response) ->
                     new FreeMarkerEngine(CONFIGURATION).render(new ModelAndView(
                             new HashMap<String, Object>(),
                             "customer/create_customer.html"
                     )));
+
+            // Sends the customer form data to the database
             post("/add", (request, response) -> {
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
                 customerDAO.insertCustomer(customer);
+                saveProperties();
 
                 response.type("application/json");
                 response.status(StatusResponse.CREATED.getCode());
                 return new Gson().toJson("Customer created.");
             });
             // TODO: 7/28/2019 Update selected customer in database.
+            // Updates a customer in the database with the specified ID
             put("/update/:id", (request, response) -> {
+                saveProperties();
+
                 response.type("application/json");
                 return new Gson().toJson(new StandardResponse(
                         StatusResponse.NOT_IMPLEMENTED,
                         "Customer information updating has note been implemented."
                 ));
             });
+
+            // Deletes a customer in the database with the specified ID
             delete("/delete/:id", (request, response) -> {
                 customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
+                saveProperties();
 
                 return new Gson().toJson(new StandardResponse(
                         StatusResponse.NO_CONTENT,
                         "Customer deleted."
                 ));
             });
+
+            // Gets the success page for a user action
             get("/success", (request, response) -> {
                 response.status(StatusResponse.OK.getCode());
                 return new FreeMarkerEngine(CONFIGURATION).render(
                         new ModelAndView(new HashMap<String, Object>(), "customer/success.html")
                 );
             });
+
+            // Gets the error page for a user action
             get("/error", (request, response) -> {
                 response.status(StatusResponse.INTERNAL_SERVER_ERROR.getCode());
                 return new FreeMarkerEngine(CONFIGURATION).render(
                         new ModelAndView(new HashMap<String, Object>(), "customer/error.html")
                 );
             });
-            // Saves the current_id property after each request
-            after((request, response) -> saveProperties());
         });
 
         while (flag) {
@@ -238,7 +255,11 @@ public class Main {
             e.printStackTrace();
         } finally {
             customerDAO = new CustomerDAO(
-                    properties.getProperty(DATABASE_URL_PROPERTY),
+                    String.format("%s%s%s",
+                            DATABASE_DRIVER_PREFIX,
+                            USER_PROFILE,
+                            properties.getProperty(DATABASE_URL_PROPERTY)
+                    ),
                     Integer.parseInt(properties.getProperty(CURRENT_ID_PROPERTY))
             );
         }

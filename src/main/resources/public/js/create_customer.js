@@ -1,6 +1,6 @@
-$(document).ready(function () {
+$(document).ready(() => {
     let customerForm = $('#customer-form');
-    customerForm.submit(function (event) {
+    customerForm.submit((event) => {
         event.preventDefault();
 
         let data = {
@@ -16,9 +16,9 @@ $(document).ready(function () {
         $.post(
             'http://localhost:4567/customer/add',
             JSON.stringify(data),
-            function (data, status) {
-                if (status === 'success') location.replace('http://localhost:4567customer/success');
-                else location.replace('http://localhost:4567/customer/error')
+            (data, status) => {
+                if (status === 'success') window.location = 'http://localhost:4567/customer/success';
+                else window.location = 'http://localhost:4567/customer/error'
             }
         )
     });
