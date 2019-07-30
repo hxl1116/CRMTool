@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CRM Tool</title>
-    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
 <header id="main-header">
@@ -17,7 +17,7 @@
             <li><a href="http://localhost:4567/">Home</a></li>
             <li><a href="http://localhost:4567/customer/add">Create Customer</a></li>
             <li><a href="#">Update Customer</a></li>
-            <li><a href="#">Delete Customer</a></li>
+            <li><a href="http://localhost:4567/customer/delete">Delete Customer</a></li>
         </ul>
     </div>
 </nav>

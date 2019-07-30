@@ -13,10 +13,16 @@
 </header>
 <nav class="nav-bar">
     <div class="container">
-        <h2>There was an error adding the customer to the database.</h2>
+        <#if action == "add">
+            <h2>There was an error adding the customer to the database.</h2>
+        <#elseif action == "update">
+            <h2>There was an error updating the customer to the database.</h2>
+        <#else>
+            <h2>There was an error deleting the customer from the database.</h2>
+        </#if>
         <ul>
             <li><a href="http://localhost:4567/">Home</a></li>
-            <li><a href="http://localhost:4567/customers/create/new">Back to Form</a></li>
+            <li><a href="http://localhost:4567/customer/add">Back to Form</a></li>
         </ul>
     </div>
 </nav>

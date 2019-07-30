@@ -13,7 +13,13 @@
 </header>
 <nav class="nav-bar">
     <div class="container">
-        <h2>The customer was successfully added to the database.</h2>
+        <#if action == "add">
+            <h2>The customer was successfully added to the database.</h2>
+        <#elseif action == "update">
+            <h2>The customer was successfully updated in the database.</h2>
+        <#else>
+            <h2>The customer was successfully removed from the database.</h2>
+        </#if>
         <ul>
             <li><a href="http://localhost:4567/">Home</a></li>
             <li><a href="http://localhost:4567/customer/show/all">Show Customers</a></li>

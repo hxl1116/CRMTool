@@ -91,7 +91,7 @@ public class Main {
 
                     response.status(StatusResponse.OK.getCode());
                     return new FreeMarkerEngine(CONFIGURATION).render(
-                            new ModelAndView(model, "customer/show/show_customer.ftl")
+                            new ModelAndView(model, "customer/show_customer.ftl")
                     );
                 });
 
@@ -106,7 +106,7 @@ public class Main {
                     );
                 });
             });
-            // Gets the customer form page
+            // Gets the customer creation form page
             // TODO: 7/28/2019 Get new customer and display on success page.
             get("/add", (request, response) ->
                     new FreeMarkerEngine(CONFIGURATION).render(new ModelAndView(
@@ -136,30 +136,43 @@ public class Main {
                 ));
             });
 
+            // Gets the customer deletion form page
+            get("/delete", (request, response) -> {
+                response.status(StatusResponse.OK.getCode());
+                return new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(new HashMap<String, Object>(), "customer/delete_customer.html")
+                );
+            });
+
             // Deletes a customer in the database with the specified ID
             delete("/delete/:id", (request, response) -> {
                 customerDAO.deleteCustomer(Integer.parseInt(request.params("id")));
                 saveProperties();
 
-                return new Gson().toJson(new StandardResponse(
-                        StatusResponse.NO_CONTENT,
-                        "Customer deleted."
-                ));
+                response.type("application/json");
+                response.status(StatusResponse.OK.getCode());
+                return new Gson().toJson("Customer deleted.");
             });
 
             // Gets the success page for a user action
-            get("/success", (request, response) -> {
+            get("/success/:action", (request, response) -> {
+                Map<String, Object> model = new HashMap<>();
+                model.put("action", request.params("action"));
+
                 response.status(StatusResponse.OK.getCode());
                 return new FreeMarkerEngine(CONFIGURATION).render(
-                        new ModelAndView(new HashMap<String, Object>(), "customer/success.html")
+                        new ModelAndView(model, "customer/success.ftl")
                 );
             });
 
             // Gets the error page for a user action
-            get("/error", (request, response) -> {
+            get("/error/:action", (request, response) -> {
+                Map<String, Object> model = new HashMap<>();
+                model.put("action", request.params("action"));
+
                 response.status(StatusResponse.INTERNAL_SERVER_ERROR.getCode());
                 return new FreeMarkerEngine(CONFIGURATION).render(
-                        new ModelAndView(new HashMap<String, Object>(), "customer/error.html")
+                        new ModelAndView(model, "customer/error.ftl")
                 );
             });
         });
