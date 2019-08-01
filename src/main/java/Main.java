@@ -75,7 +75,7 @@ public class Main {
         get("/", (request, response) -> {
             response.status(StatusResponse.OK.getCode());
             return new FreeMarkerEngine(CONFIGURATION).render(
-                    new ModelAndView(new HashMap<String, Object>(), "index.html")
+                    new ModelAndView(new HashMap<String, Object>(), "home.html")
             );
         });
 
@@ -85,6 +85,15 @@ public class Main {
             return new FreeMarkerEngine(CONFIGURATION).render(
                     new ModelAndView(new HashMap<String, Object>(), "index.html")
             );
+        });
+
+        get("/customers", (request, response) -> {
+            List<Customer> customers = customerDAO.selectAllCustomers();
+
+            response.status(StatusResponse.OK.getCode());
+            response.type("application/json");
+
+            return new Gson().toJson(customers);
         });
 
         // Customer paths
