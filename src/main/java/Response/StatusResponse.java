@@ -14,4 +14,8 @@ public enum StatusResponse {
     StatusResponse(int code) {
         this.code = code;
     }
+
+    public int getCode() {
+        return code;
+    }
 }

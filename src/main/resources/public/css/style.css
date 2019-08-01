@@ -1,0 +1,201 @@
+@media screen and (min-width: 480px) {
+
+}
+
+body {
+    background-color: #4f4f4f;
+    color: #555555;
+    /*font: 16px Arial, Helvetica, sans-serif;*/
+    font: 16px Montserrat, sans-serif;
+    /*font-family: 'Montserrat', sans-serif;*/
+    line-height: 1.6em;
+    margin: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.container h2 {
+    color: #ffffff;
+}
+
+.container p {
+    color: #ffffff;
+}
+
+.submit-button {
+    background-color: #333333;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+}
+
+.submit-button:hover {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.nav-bar {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.nav-bar ul {
+    padding: 0;
+    list-style: none;
+}
+
+.nav-bar li {
+    display: inline;
+}
+
+.nav-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    padding-right: 15px;
+}
+
+.customer-form {
+    width: 40%;
+    padding: 20px 0;
+}
+
+.form-group {
+    margin-top: 10px;
+}
+
+.form-group label {
+    color: #ffffff;
+    display: block;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[list] {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 8px;
+    width: 40%;
+}
+
+#main-header {
+    background-color: bisque;
+    color: #ffffff;
+}
+
+#main-footer {
+    background-color: #333333;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 40px;
+}
+
+#main-section #customer-list {
+    padding: 0;
+    list-style: none;
+}
+
+#main-section #customer-item {
+    color: #ffffff;
+}
+
+#main-section #customer-block {
+    float: left;
+    width: 25%;
+    border: 5px solid #333333;
+    margin: 15px 15px 0 0;
+    padding: 10px 15px;
+    box-sizing: border-box;
+}
+
+#customer-block:hover {
+    background-color: #ffffff;
+    color: #555555;
+}
+
+#customer-block h3 {
+    color: #ffffff;
+}
+
+#customer-block:hover h3 {
+    color: #333333;
+}
+
+#customer-block p {
+    color: #ffffff;
+}
+
+#customer-block:hover p {
+    color: #333333;
+}
+
+/* For Home Page */
+#home-nav-bar {
+    color: #4f4f4f;
+    position: fixed;
+    top: 0;
+    display: flex;
+    flex-flow: wrap column;
+}
+
+#home-nav-bar ul {
+    padding: 0 15px;
+    list-style: none;
+}
+
+#home-nav-bar li {
+    display: flex;
+    /*margin: 10px 0;*/
+}
+
+#home-nav-bar a {
+    width: 25vh
+}
+
+.home-button {
+    /*background: #f4f4f4;*/
+    background: rgba(244, 244, 244, .2);
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #4f4f4f;
+    border: #4f4f4f 2px solid;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.home-button:hover {
+    background-color: #4f4f4f;
+    color: #ffffff;
+    transition: background-color .5s ease-out;
+}
+
+#showcase {
+    background-image: url("../img/home_page_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+#showcase h1 {
+    font-size: 50px;
+    line-height: 1.2em;
+}
+
+#showcase p {
+    font-size: 20px;
+}
