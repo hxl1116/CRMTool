@@ -136,23 +136,13 @@ public class Main {
             get("/update", (request, response) -> {
                 response.status(StatusResponse.OK.getCode());
                 return new FreeMarkerEngine(CONFIGURATION).render(
-                        new ModelAndView(new HashMap<String, Object>(), "customer/update_customer.ftl")
-                );
-            });
-
-            get("/update/:id", (request, response) -> {
-                Map<String, Object> model = new HashMap<>();
-                model.put("customer", customerDAO.selectCustomer(Integer.parseInt(request.params("id"))));
-
-                response.status(StatusResponse.OK.getCode());
-                return new FreeMarkerEngine(CONFIGURATION).render(
-                        new ModelAndView(model, "customer/update_customer.ftl")
+                        new ModelAndView(new HashMap<String, Object>(), "customer/update_customer.html")
                 );
             });
 
             // TODO: 7/28/2019 Update selected customer in database.
             // Updates a customer in the database with the specified ID
-            put("/update/:id", (request, response) -> {
+            put("/update", (request, response) -> {
                 Customer customer = new Gson().fromJson(request.body(), Customer.class);
                 customerDAO.updateCustomer(customer);
                 saveProperties();
@@ -280,7 +270,6 @@ public class Main {
                 printUsage();
             }
         }
-
     }
 
     /**

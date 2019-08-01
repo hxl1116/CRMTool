@@ -16,7 +16,7 @@
         <ul>
             <li><a href="http://localhost:4567/">Home</a></li>
             <li><a href="http://localhost:4567/customer/add">Create Customer</a></li>
-            <li><a href="#">Update Customer</a></li>
+            <li><a href="http://localhost:4567/customer/update">Update Customer</a></li>
             <li><a href="http://localhost:4567/customer/delete">Delete Customer</a></li>
         </ul>
     </div>

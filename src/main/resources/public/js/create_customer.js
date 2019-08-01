@@ -1,8 +1,7 @@
 const userAction = 'add';
 
 $(document).ready(() => {
-    let customerForm = $('#create-customer-form');
-    customerForm.submit((event) => {
+    $('#create-customer-form').submit((event) => {
         event.preventDefault();
 
         let data = {
@@ -12,7 +11,7 @@ $(document).ready(() => {
             'email': $('#email').val().toString(),
             'age': $('#age').val().toString(),
             'gender': $('#gender').val().toString(),
-            'profession': $('#profession').val().toString(),
+            'profession': $('#profession').val().toString()
         };
 
         $.ajax({
