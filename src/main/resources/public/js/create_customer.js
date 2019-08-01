@@ -21,7 +21,7 @@ $(document).ready(() => {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: () => window.location = 'http://localhost:4567/customer/success/' + userAction,
-            // error: () => window.location = 'http://localhost:4567/customer/error/' + userAction
+            error: () => window.location = 'http://localhost:4567/customer/error/' + userAction
         });
     });
 });

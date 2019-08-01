@@ -71,15 +71,21 @@ public class Main {
         printUsage();
 
         // Gets the landing page
-        // TODO: 7/28/2019 Change view to home.html when built.
-        get("/", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                new ModelAndView(new HashMap<String, Object>(), "index.html")
-        ));
+        // TODO: 7/28/2019 Change view to home.html
+        get("/", (request, response) -> {
+            response.status(StatusResponse.OK.getCode());
+            return new FreeMarkerEngine(CONFIGURATION).render(
+                    new ModelAndView(new HashMap<String, Object>(), "index.html")
+            );
+        });
 
         // Gets the index page
-        get("/index", (request, response) -> new FreeMarkerEngine(CONFIGURATION).render(
-                new ModelAndView(new HashMap<String, Object>(), "index.html")
-        ));
+        get("/index", (request, response) -> {
+            response.status(StatusResponse.OK.getCode());
+            return new FreeMarkerEngine(CONFIGURATION).render(
+                    new ModelAndView(new HashMap<String, Object>(), "index.html")
+            );
+        });
 
         // Customer paths
         path("/customer", () -> {
@@ -102,17 +108,19 @@ public class Main {
 
                     response.status(StatusResponse.OK.getCode());
                     return new FreeMarkerEngine(CONFIGURATION).render(
-                            new ModelAndView(model, "customer/show/show_customer.ftl")
+                            new ModelAndView(model, "customer/show_customer.ftl")
                     );
                 });
             });
+
             // Gets the customer creation form page
-            // TODO: 7/28/2019 Get new customer and display on success page.
-            get("/add", (request, response) ->
-                    new FreeMarkerEngine(CONFIGURATION).render(new ModelAndView(
-                            new HashMap<String, Object>(),
-                            "customer/create_customer.html"
-                    )));
+            // TODO: 7/28/2019 Get new customer and display on success page
+            get("/add", (request, response) -> {
+                response.status(StatusResponse.OK.getCode());
+                return new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(new HashMap<String, Object>(), "customer/create_customer.html")
+                );
+            });
 
             // Sends the customer form data to the database
             post("/add", (request, response) -> {
@@ -124,16 +132,33 @@ public class Main {
                 response.status(StatusResponse.CREATED.getCode());
                 return new Gson().toJson("Customer created.");
             });
+
+            get("/update", (request, response) -> {
+                response.status(StatusResponse.OK.getCode());
+                return new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(new HashMap<String, Object>(), "customer/update_customer.ftl")
+                );
+            });
+
+            get("/update/:id", (request, response) -> {
+                Map<String, Object> model = new HashMap<>();
+                model.put("customer", customerDAO.selectCustomer(Integer.parseInt(request.params("id"))));
+
+                response.status(StatusResponse.OK.getCode());
+                return new FreeMarkerEngine(CONFIGURATION).render(
+                        new ModelAndView(model, "customer/update_customer.ftl")
+                );
+            });
+
             // TODO: 7/28/2019 Update selected customer in database.
             // Updates a customer in the database with the specified ID
             put("/update/:id", (request, response) -> {
+                Customer customer = new Gson().fromJson(request.body(), Customer.class);
+                customerDAO.updateCustomer(customer);
                 saveProperties();
 
-                response.type("application/json");
-                return new Gson().toJson(new StandardResponse(
-                        StatusResponse.NOT_IMPLEMENTED,
-                        "Customer information updating has note been implemented."
-                ));
+                response.status(StatusResponse.OK.getCode());
+                return new Gson().toJson("Customer updated.");
             });
 
             // Gets the customer deletion form page
