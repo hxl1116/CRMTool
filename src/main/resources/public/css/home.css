@@ -1,0 +1,115 @@
+body {
+    background: #f4f4f4;
+    color: #4f4f4f;
+    font: 16px Monsterrat, sans-serif;
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#home-nav {
+    background: #f4f4f4;
+    position: fixed;
+    padding: 0;
+    width: 100%;
+    top: 0;
+}
+
+#home-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#home-nav li {
+    padding: 10px 15px;
+}
+
+#home-nav a {
+    color: #4f4f4f;
+    /*margin-right: 5px;*/
+    border: none;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+#home-nav a:hover {
+    /*color: #9f9f9f;*/
+    /*padding-left: 5px;*/
+    border-bottom: #a1cdf4 3px solid;
+    /*border-left: #a1cdf4 3px solid;*/
+    transition: all .2s ease-in;
+}
+
+#showcase {
+    background-image: url("../img/home_page_bg.jpg");
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#showcase h1 {
+    font-size: 50px;
+}
+
+#showcase a {
+    /*background: rgba(244, 244, 244, .2);*/
+    color: #4f4f4f;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    width: 20vh;
+    margin-top: 15px;
+    /*padding: 10px 20px;*/
+    /*border: #4f4f4f 2px solid;*/
+    /*border-radius: 5px;*/
+}
+
+#showcase a:hover {
+    /*background: #4f4f4f;*/
+    /*color: #f4f4f4;*/
+    /*padding-left: 10px;*/
+    border-bottom: #a1cdf4 5px solid;
+    /*border-left: #a1cdf4 3px solid;*/
+    /*border-right: #a1cdf4 3px solid;*/
+    transition: all .2s ease-in;
+}
+
+#customer-section {
+
+}
+
+#customer-section h1 {
+    padding: 0 15px;
+}
+
+#customer-section ul {
+    list-style: none;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#customer-section li {
+    padding: 10px 15px;
+}
+
+#customer-section .customer-box {
+
+}
+
+#customer-section .customer-box:hover {
+
+}
