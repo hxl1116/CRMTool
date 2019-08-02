@@ -6,26 +6,33 @@
     <link rel="stylesheet" href="../css/home.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../js/show_customers.js"></script>
+    <script src="../js/home.js"></script>
 </head>
 <body>
 <div class="wrapper">
     <nav id="home-nav">
         <ul>
-            <li><a href="#" class="nav-button">Create Customer</a></li>
-            <li><a href="#" class="nav-button">Update Customer</a></li>
-            <li><a href="#" class="nav-button">Delete Customer</a></li>
+            <li><a id="create-customer-btn" class="nav-btn">Create Customer</a></li>
+            <li><a href="#" class="nav-btn">Update Customer</a></li>
+            <li><a href="#" class="nav-btn">Delete Customer</a></li>
         </ul>
     </nav>
     <div id="showcase">
         <header>
             <h1>Welcome to CRM Tool</h1>
-            <a href="#" class="nav-button">Show Customers</a>
+            <a href="#" id="show-customers-btn" class="nav-btn">Show Customers</a>
         </header>
     </div>
     <section id="customer-section">
+        <div id="show-customer-spinner" class="spinner"></div>
         <h2>Customers</h2>
         <ul id="customer-list"></ul>
+        <form id="create-customer-form">
+            <div id="customer-input-box">
+                <label for="customer-input">Placeholder</label>
+                <input id="customer-input" placeholder="Placeholder">
+            </div>
+        </form>
     </section>
 </div>
 </body>

@@ -1,3 +1,9 @@
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 body {
     background: #f4f4f4;
     color: #4f4f4f;
@@ -65,6 +71,11 @@ body {
     font-size: 50px;
 }
 
+#showcase p {
+    margin: 0;
+    padding: 0;
+}
+
 #showcase a {
     /*background: rgba(244, 244, 244, .2);*/
     color: #4f4f4f;
@@ -90,7 +101,8 @@ body {
 }
 
 #customer-section {
-    height: 93vh;
+    height: 95vh;
+    position: relative;
 }
 
 #customer-section h2 {
@@ -99,6 +111,7 @@ body {
     margin: 0;
     padding: 10px 15px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 #customer-section ul {
@@ -119,4 +132,29 @@ body {
 
 #customer-section .customer-box:hover {
     background: #a1cdf4;
+}
+
+#customer-section #create-customer-form {
+    padding: 0 15px;
+}
+
+.spinner:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 40px;
+    width: 40px;
+    margin-top: -20px;
+    margin-left: -20px;
+    box-sizing: border-box;
+    border: 3px solid #f4f4f4;
+    border-top-color: #a1cdf4;
+    border-bottom-color: #a1cdf4;
+    border-radius: 50%;
+    animation: spinner .5s ease-in-out infinite;
+}
+
+.spinner .hide {
+    display: none;
 }
