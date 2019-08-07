@@ -1,27 +1,20 @@
 import Control.CustomerDAO;
 import Model.Customer;
-import Response.StandardResponse;
 import Response.StatusResponse;
 import com.google.gson.Gson;
+import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.Version;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
-import freemarker.template.Configuration;
-import freemarker.template.Version;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static spark.Spark.*;
